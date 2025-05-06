@@ -86,6 +86,32 @@
             margin: 20px 0;
             font-size: 22px;
         }
+        .unit-price-input {
+            margin-bottom: 15px;
+        }
+        .unit-price-input label {
+            font-weight: normal;
+            display: inline-flex;
+            align-items: center;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .unit-price-input input[type="radio"] {
+            width: auto;
+            margin-right: 5px;
+        }
+        .price-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .price-wrapper input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .price-wrapper .unit {
+            font-size: 16px;
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -98,9 +124,11 @@
         </div>
         
         <div class="input-group">
-            <label for="purchasePrice">进货单价 (元/斤):</label>
-            <input type="number" id="purchasePrice" step="0.01" placeholder="请输入进货单价">
-            <div class="note">按照处理后重量的单价</div>
+            <label>销售单价 (元/斤):</label>
+            <div class="price-wrapper">
+                <input type="number" id="sellingPrice" step="0.01" placeholder="请输入销售单价">
+                <span class="unit">元/斤</span>
+            </div>
         </div>
         
         <button onclick="calculate()">计算</button>
@@ -114,7 +142,6 @@
             <div class="note">
                 <p>计算说明:</p>
                 <p>- 原始重量 = 处理后重量 ÷ 0.73</p>
-                <p>- 销售单价 = 进货单价 × 1.36</p>
                 <p>- 总价 = 原始重量 × 销售单价 + 23元(杂项费用)</p>
             </div>
             
@@ -130,19 +157,13 @@
                     <span class="result-title">原始重量:</span> <span id="resultOriginalWeight"></span> 斤
                 </div>
                 <div class="result-row">
-                    <span class="result-title">进货单价:</span> <span id="resultPurchasePrice"></span> 元/斤
-                </div>
-                <div class="result-row">
                     <span class="result-title">销售单价:</span> <span id="resultSellingPrice"></span> 元/斤
-                </div>
-                <div class="result-row">
-                    <span class="result-title">进货总价:</span> <span id="resultTotalPurchase"></span> 元
                 </div>
                 <div class="result-row">
                     <span class="result-title">杂项费用:</span> <span id="resultMiscFee"></span> 元
                 </div>
                 <div class="result-row">
-                    <span class="result-title">毛利润:</span> <span id="resultProfit"></span> 元
+                    <span class="result-title">销售总价:</span> <span id="resultTotalSellingDetail"></span> 元
                 </div>
             </div>
         </div>
@@ -152,32 +173,26 @@
         function calculate() {
             // 获取输入值
             const processedWeight = parseFloat(document.getElementById('processedWeight').value);
-            const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value);
             const miscFee = 23; // 固定杂项费用
             
             // 验证输入
-            if (isNaN(processedWeight) || isNaN(purchasePrice)) {
+            if (isNaN(processedWeight) || isNaN(sellingPrice)) {
                 alert('请输入有效的重量和价格');
                 return;
             }
             
             // 计算
             const originalWeight = processedWeight / 0.73;
-            const sellingPrice = purchasePrice * 1.36;
-            
-            const totalPurchase = processedWeight * purchasePrice;
             const totalSelling = originalWeight * sellingPrice + miscFee;
-            const profit = totalSelling - totalPurchase - miscFee;
             
             // 显示结果
             document.getElementById('resultProcessedWeight').textContent = processedWeight.toFixed(2);
             document.getElementById('resultOriginalWeight').textContent = originalWeight.toFixed(2);
-            document.getElementById('resultPurchasePrice').textContent = purchasePrice.toFixed(2);
             document.getElementById('resultSellingPrice').textContent = sellingPrice.toFixed(2);
-            document.getElementById('resultTotalPurchase').textContent = totalPurchase.toFixed(2);
             document.getElementById('resultMiscFee').textContent = miscFee.toFixed(2);
             document.getElementById('resultTotalSelling').textContent = totalSelling.toFixed(2);
-            document.getElementById('resultProfit').textContent = profit.toFixed(2);
+            document.getElementById('resultTotalSellingDetail').textContent = totalSelling.toFixed(2);
             
             // 显示结果区域
             document.getElementById('result').style.display = 'block';
