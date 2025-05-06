@@ -86,19 +86,23 @@
             margin: 20px 0;
             font-size: 22px;
         }
-        .unit-price-input {
-            margin-bottom: 15px;
+        .main-results {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f9f0;
+            border-radius: 8px;
         }
-        .unit-price-input label {
-            font-weight: normal;
-            display: inline-flex;
-            align-items: center;
-            margin-right: 15px;
-            cursor: pointer;
+        .result-box {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
         }
-        .unit-price-input input[type="radio"] {
-            width: auto;
-            margin-right: 5px;
+        .result-box-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
         }
         .price-wrapper {
             display: flex;
@@ -134,9 +138,17 @@
         <button onclick="calculate()">计算</button>
         
         <div id="result" class="result">
-            <div class="big-result">
-                <span class="result-title">应该收取:</span> 
-                <span class="highlight" id="resultTotalSelling"></span> 元
+            <div class="main-results">
+                <div class="result-box">
+                    <div class="result-box-title">原始重量</div>
+                    <div class="highlight" id="resultOriginalWeight"></div>
+                    <div>斤</div>
+                </div>
+                <div class="result-box">
+                    <div class="result-box-title">应该收取</div>
+                    <div class="highlight" id="resultTotalSelling"></div>
+                    <div>元</div>
+                </div>
             </div>
             
             <div class="note">
@@ -154,7 +166,7 @@
                     <span class="result-title">处理后重量:</span> <span id="resultProcessedWeight"></span> 斤
                 </div>
                 <div class="result-row">
-                    <span class="result-title">原始重量:</span> <span id="resultOriginalWeight"></span> 斤
+                    <span class="result-title">原始重量:</span> <span id="resultOriginalWeightDetail"></span> 斤
                 </div>
                 <div class="result-row">
                     <span class="result-title">销售单价:</span> <span id="resultSellingPrice"></span> 元/斤
@@ -189,6 +201,7 @@
             // 显示结果
             document.getElementById('resultProcessedWeight').textContent = processedWeight.toFixed(2);
             document.getElementById('resultOriginalWeight').textContent = originalWeight.toFixed(2);
+            document.getElementById('resultOriginalWeightDetail').textContent = originalWeight.toFixed(2);
             document.getElementById('resultSellingPrice').textContent = sellingPrice.toFixed(2);
             document.getElementById('resultMiscFee').textContent = miscFee.toFixed(2);
             document.getElementById('resultTotalSelling').textContent = totalSelling.toFixed(2);
