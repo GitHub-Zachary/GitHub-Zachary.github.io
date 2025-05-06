@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家禽销售计算器</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+            display: none;
+        }
+        .result-row {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .result-title {
+            font-weight: bold;
+            color: #333;
+        }
+        .highlight {
+            color: #e53935;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .note {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        .big-result {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 22px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>家禽销售计算器</h1>
+        
+        <div class="input-group">
+            <label for="processedWeight">处理后重量 (斤):</label>
+            <input type="number" id="processedWeight" step="0.01" placeholder="请输入处理后的重量">
+        </div>
+        
+        <div class="input-group">
+            <label for="purchasePrice">进货单价 (元/斤):</label>
+            <input type="number" id="purchasePrice" step="0.01" placeholder="请输入进货单价">
+            <div class="note">按照处理后重量的单价</div>
+        </div>
+        
+        <button onclick="calculate()">计算</button>
+        
+        <div id="result" class="result">
+            <div class="big-result">
+                <span class="result-title">应该收取:</span> 
+                <span class="highlight" id="resultTotalSelling"></span> 元
+            </div>
+            
+            <div class="note">
+                <p>计算说明:</p>
+                <p>- 原始重量 = 处理后重量 ÷ 0.73</p>
+                <p>- 销售单价 = 进货单价 × 1.36</p>
+                <p>- 总价 = 原始重量 × 销售单价 + 23元(杂项费用)</p>
+            </div>
+            
+            <div id="detailsToggle" style="color: #4CAF50; cursor: pointer; margin-top: 10px; text-decoration: underline;" onclick="toggleDetails()">
+                显示详细计算过程
+            </div>
+            
+            <div id="details" style="display: none; margin-top: 15px;">
+                <div class="result-row">
+                    <span class="result-title">处理后重量:</span> <span id="resultProcessedWeight"></span> 斤
+                </div>
+                <div class="result-row">
+                    <span class="result-title">原始重量:</span> <span id="resultOriginalWeight"></span> 斤
+                </div>
+                <div class="result-row">
+                    <span class="result-title">进货单价:</span> <span id="resultPurchasePrice"></span> 元/斤
+                </div>
+                <div class="result-row">
+                    <span class="result-title">销售单价:</span> <span id="resultSellingPrice"></span> 元/斤
+                </div>
+                <div class="result-row">
+                    <span class="result-title">进货总价:</span> <span id="resultTotalPurchase"></span> 元
+                </div>
+                <div class="result-row">
+                    <span class="result-title">杂项费用:</span> <span id="resultMiscFee"></span> 元
+                </div>
+                <div class="result-row">
+                    <span class="result-title">毛利润:</span> <span id="resultProfit"></span> 元
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            // 获取输入值
+            const processedWeight = parseFloat(document.getElementById('processedWeight').value);
+            const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
+            const miscFee = 23; // 固定杂项费用
+            
+            // 验证输入
+            if (isNaN(processedWeight) || isNaN(purchasePrice)) {
+                alert('请输入有效的重量和价格');
+                return;
+            }
+            
+            // 计算
+            const originalWeight = processedWeight / 0.73;
+            const sellingPrice = purchasePrice * 1.36;
+            
+            const totalPurchase = processedWeight * purchasePrice;
+            const totalSelling = originalWeight * sellingPrice + miscFee;
+            const profit = totalSelling - totalPurchase - miscFee;
+            
+            // 显示结果
+            document.getElementById('resultProcessedWeight').textContent = processedWeight.toFixed(2);
+            document.getElementById('resultOriginalWeight').textContent = originalWeight.toFixed(2);
+            document.getElementById('resultPurchasePrice').textContent = purchasePrice.toFixed(2);
+            document.getElementById('resultSellingPrice').textContent = sellingPrice.toFixed(2);
+            document.getElementById('resultTotalPurchase').textContent = totalPurchase.toFixed(2);
+            document.getElementById('resultMiscFee').textContent = miscFee.toFixed(2);
+            document.getElementById('resultTotalSelling').textContent = totalSelling.toFixed(2);
+            document.getElementById('resultProfit').textContent = profit.toFixed(2);
+            
+            // 显示结果区域
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        function toggleDetails() {
+            const details = document.getElementById('details');
+            const toggle = document.getElementById('detailsToggle');
+            
+            if (details.style.display === 'none') {
+                details.style.display = 'block';
+                toggle.textContent = '隐藏详细计算过程';
+            } else {
+                details.style.display = 'none';
+                toggle.textContent = '显示详细计算过程';
+            }
+        }
+    </script>
+</body>
+</html>
